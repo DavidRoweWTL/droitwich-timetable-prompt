@@ -43,3 +43,7 @@ The prompt was written with Grok, built by xAI, to direct Grok. Grok does the re
 ## License
 
 The prompt text in this repository is MIT licensed. See [LICENSE](LICENSE). That license does not cover timetable data, the Active In Time site, or files generated from them.
+
+## Example
+
+[examples/droitwich-main-pool-public-4-10-Oct-2026.html](examples/droitwich-main-pool-public-4-10-Oct-2026.html) is one page made from the prompt for Sunday 4 October to Saturday 10 October 2026. It is a snapshot, not a live timetable. Download it and open it in a browser. GitHub will show the source, not the grid.
