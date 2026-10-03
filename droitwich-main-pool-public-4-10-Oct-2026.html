@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Droitwich main pool Sun 4 Oct – Sat 10 Oct 2026</title>
+<style>
+  :root { --ink:#142033; --muted:#5c6b80; --line:#d7e0ea; --paper:#f4f7fb; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--paper); color: var(--ink); }
+  body { font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif; padding: 8px 10px; }
+  header { display: flex; justify-content: space-between; align-items: flex-end; gap: 12px; margin-bottom: 6px; }
+  h1 { font-size: 18px; line-height: 1.1; margin: 0 0 2px; letter-spacing: -0.02em; }
+  .sub, .meta { margin: 0; color: var(--muted); font-size: 11px; line-height: 1.35; }
+  .meta { text-align: right; }
+  .legend { display: flex; gap: 12px; margin: 4px 0 8px; font-size: 11px; color: #334155; }
+  .legend span { display: inline-flex; align-items: center; gap: 5px; }
+  .sw { width: 10px; height: 10px; border-radius: 2px; display: inline-block; }
+  .board { background: #fff; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+  .head, .row { display: grid; grid-template-columns: 48px repeat(7, 1fr); }
+  .head { background: #12324f; color: #fff; }
+  .head div { padding: 7px 4px; text-align: center; border-left: 1px solid rgba(255,255,255,.12); }
+  .head div:first-child { border-left: 0; }
+  .dow { font-weight: 700; font-size: 13px; }
+  .date { font-size: 11px; opacity: .85; }
+  .time, .cell { border-top: 1px solid #eef2f6; height: 17px; }
+  .row.hour .time, .row.hour .cell { border-top-color: #d5dee8; }
+  .time { font-size: 10px; color: #607089; text-align: right; padding: 0 6px 0 0; line-height: 17px; font-variant-numeric: tabular-nums; }
+  .cell { border-left: 1px solid #eef2f6; position: relative; }
+  .block { position: absolute; left: 3px; right: 3px; border-radius: 4px; color: #fff; padding: 3px 5px 2px; overflow: hidden; z-index: 2; line-height: 1.15; }
+  .name { font-size: 11px; font-weight: 700; }
+  .detail { font-size: 9px; opacity: .94; }
+  .note { margin: 4px 2px 0; color: var(--muted); font-size: 10px; line-height: 1.3; }
+  @media print { body { background:#fff; padding:0; } @page { size: A4 landscape; margin: 7mm; } }
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>Droitwich Spa — Main Pool, public sessions</h1>
+    <p class="sub">General, lane swim, adult saver and family only. Other sessions are left blank, including where these overlap them.</p>
+  </div>
+  <p class="meta">Sun 4 Oct – Sat 10 Oct 2026<br>Active In Time timetable</p>
+</header>
+<div class="legend">
+  <span><i class="sw" style="background:#1d4e89"></i>Lane swim</span>
+  <span><i class="sw" style="background:#0f766e"></i>General</span>
+  <span><i class="sw" style="background:#6d28d9"></i>Adult saver</span>
+  <span><i class="sw" style="background:#157a45"></i>Family</span>
+</div>
+<div class="board" id="board"></div>
+<p class="note">Tue 17:30–18:00 lane swim runs beside junior lessons. Wed 18:00–19:00 general is half the pool, beside swimming club. Splash hour, lessons, school swimming, club, H2O, pilates and lifesaving are omitted. Times can change — check the centre before you travel.</p>
+<script>
+const START = 6*60, END = 22*60, PX = 17;
+const colours = { lane:"#1d4e89", general:"#0f766e", saver:"#6d28d9", family:"#157a45" };
+const days = [{"dow": "Sun", "date": "4 Oct", "sessions": [["07:00", "09:00", "Lane swim", "6 lanes", "lane"], ["09:00", "13:00", "Family", "", "family"], ["15:00", "16:00", "Family", "", "family"]]}, {"dow": "Mon", "date": "5 Oct", "sessions": [["06:00", "09:00", "Lane swim", "6 lanes", "lane"], ["09:00", "13:30", "General", "3 lanes", "general"], ["14:30", "15:30", "Adult saver", "", "saver"], ["15:30", "16:00", "General", "", "general"], ["17:30", "19:00", "General", "3 lanes", "general"]]}, {"dow": "Tue", "date": "6 Oct", "sessions": [["06:00", "09:00", "Lane swim", "6 lanes", "lane"], ["10:00", "11:00", "General", "", "general"], ["12:00", "14:00", "General", "3 lanes", "general"], ["14:30", "16:00", "General", "", "general"], ["17:30", "19:00", "Lane swim", "shares to 18:00", "lane"]]}, {"dow": "Wed", "date": "7 Oct", "sessions": [["06:00", "09:00", "Lane swim", "6 lanes", "lane"], ["09:00", "10:30", "General", "", "general"], ["11:30", "13:30", "General", "3 lanes", "general"], ["14:30", "15:30", "Adult saver", "", "saver"], ["18:00", "19:00", "General", "half pool", "general"], ["20:30", "22:00", "Lane swim", "6 lanes", "lane"]]}, {"dow": "Thu", "date": "8 Oct", "sessions": [["06:00", "09:00", "Lane swim", "6 lanes", "lane"], ["11:30", "13:30", "General", "with lanes", "general"], ["19:00", "20:00", "General", "3 lanes", "general"], ["21:00", "22:00", "Lane swim", "6 lanes", "lane"]]}, {"dow": "Fri", "date": "9 Oct", "sessions": [["06:00", "09:00", "Lane swim", "6 lanes", "lane"], ["09:00", "11:00", "General", "", "general"], ["12:00", "14:30", "General", "", "general"], ["14:30", "15:30", "Adult saver", "", "saver"], ["16:30", "18:30", "General", "with lanes", "general"]]}, {"dow": "Sat", "date": "10 Oct", "sessions": [["07:00", "08:00", "General", "", "general"], ["15:00", "17:00", "Family", "", "family"]]}];
+function mins(t){ const [h,m]=t.split(":").map(Number); return h*60+m; }
+const board = document.getElementById("board");
+const head = document.createElement("div");
+head.className = "head";
+head.innerHTML = "<div></div>" + days.map(d => `<div><div class="dow">${d.dow}</div><div class="date">${d.date}</div></div>`).join("");
+board.appendChild(head);
+const cellMap = [];
+for (let t = START; t < END; t += 30) {
+  const row = document.createElement("div");
+  row.className = "row" + (t % 60 === 0 ? " hour" : "");
+  const label = document.createElement("div");
+  label.className = "time";
+  label.textContent = (t % 60 === 0) ? String(Math.floor(t/60)).padStart(2,"0") + ":00" : "";
+  row.appendChild(label);
+  const cells = [];
+  days.forEach(() => { const cell = document.createElement("div"); cell.className = "cell"; row.appendChild(cell); cells.push(cell); });
+  cellMap.push(cells);
+  board.appendChild(row);
+}
+days.forEach((day, di) => {
+  day.sessions.forEach(s => {
+    const [a,b,name,detail,kind] = s;
+    const start = mins(a), end = mins(b);
+    const el = document.createElement("div");
+    el.className = "block";
+    el.style.background = colours[kind];
+    el.style.top = "1px";
+    el.style.height = Math.max(((end-start)/30)*PX - 3, 16) + "px";
+    el.innerHTML = `<div class="name">${name}</div>` + (detail ? `<div class="detail">${detail}</div>` : "");
+    cellMap[(start-START)/30][di].appendChild(el);
+  });
+});
+</script>
+</body>
+</html>
