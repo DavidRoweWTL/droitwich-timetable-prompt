@@ -1,4 +1,3 @@
-[PROMPT.md](https://github.com/user-attachments/files/33006385/PROMPT.md)
 # Droitwich main-pool public timetable — repeat brief
 
 Paste this whole file to Grok. Fill in the two week ranges at the bottom before you send it.
